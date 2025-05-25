@@ -4,7 +4,7 @@
 import { useEffect, useState, useRef, use } from 'react'; // Import use
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import TraitScoreDisplay from '@/components/TraitScoreDisplay';
 import { getScoreLevel, TRAITS, type TraitKey } from '@/constants/ipip';
 import { Download, BarChart3, UserCircle, CheckCircle, AlertCircle } from 'lucide-react';
@@ -180,3 +180,4 @@ export default function ResultsPage(props: { params: Promise<{ locale: Locale }>
     </div>
   );
 }
+
