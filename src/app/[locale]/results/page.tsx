@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, use } from 'react'; // Import use
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,7 +23,11 @@ async function getClientDictionary(locale: Locale): Promise<Dictionary> {
   return mod.default;
 }
 
-export default function ResultsPage({ params: { locale } }: { params: { locale: Locale } }) {
+// Props for a page component where params is a dynamic segment
+// Next.js 15 passes `params` as a Promise to page components.
+export default function ResultsPage(props: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = use(props.params); // Unwrap the promise to get the actual params object
+
   const [email, setEmail] = useState<string | null>(null);
   const [results, setResults] = useState<Record<TraitKey, number> | null>(null);
   const router = useRouter();
@@ -51,8 +56,6 @@ export default function ResultsPage({ params: { locale } }: { params: { locale: 
   useEffect(() => {
     if (email && results && dictionary) {
       // Call server action to send results to admin
-      // This is an example of how you might do it.
-      // The server action itself is mocked.
       sendResultsToAdmin({ email, scores: results, locale })
         .then(() => {
           toast({
@@ -71,13 +74,13 @@ export default function ResultsPage({ params: { locale } }: { params: { locale: 
         });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [email, results, locale, dictionary, toast]); // Added dictionary and toast as dependencies
+  }, [email, results, locale, dictionary, toast]);
 
 
   const handleDownloadPdf = async () => {
-    if (!resultsRef.current || !email) return;
+    if (!resultsRef.current || !email || !dictionary) return;
     setIsGeneratingPdf(true);
-    toast({ title: dictionary?.ResultsPage.pdfGenerating || "Generating PDF..." });
+    toast({ title: dictionary.ResultsPage.pdfGenerating || "Generating PDF..." });
 
     try {
       // Ensure the hidden email div is visible for PDF capture
@@ -107,7 +110,7 @@ export default function ResultsPage({ params: { locale } }: { params: { locale: 
       pdf.save(`PersonaScope_Results_${email.split('@')[0]}.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
-      toast({ title: dictionary?.Common.error || "Error", description: "Could not generate PDF.", variant: "destructive" });
+      toast({ title: dictionary.Common.error || "Error", description: "Could not generate PDF.", variant: "destructive" });
     } finally {
       setIsGeneratingPdf(false);
     }
