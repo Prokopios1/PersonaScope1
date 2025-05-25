@@ -62,7 +62,7 @@ export default function ResultsPage({ params: { locale } }: { params: { locale: 
             action: <CheckCircle className="text-green-500" />,
           });
         })
-        .catch(()_ => {
+        .catch(_ => {
            toast({
             title: dictionary.ResultsPage.resultsSentError,
             variant: "destructive",
@@ -80,7 +80,19 @@ export default function ResultsPage({ params: { locale } }: { params: { locale: 
     toast({ title: dictionary?.ResultsPage.pdfGenerating || "Generating PDF..." });
 
     try {
+      // Ensure the hidden email div is visible for PDF capture
+      const pdfCaptureEmailDiv = resultsRef.current.querySelector('[data-pdf-capture="true"]') as HTMLElement | null;
+      if (pdfCaptureEmailDiv) {
+        pdfCaptureEmailDiv.style.display = 'block';
+      }
+
       const canvas = await html2canvas(resultsRef.current, { scale: 2 });
+      
+      // Hide the div again after capture
+      if (pdfCaptureEmailDiv) {
+        pdfCaptureEmailDiv.style.display = 'none';
+      }
+
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -89,7 +101,7 @@ export default function ResultsPage({ params: { locale } }: { params: { locale: 
       const imgHeight = canvas.height;
       const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
       const imgX = (pdfWidth - imgWidth * ratio) / 2;
-      const imgY = 10; // Add some margin at the top
+      const imgY = 10; 
       
       pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
       pdf.save(`PersonaScope_Results_${email.split('@')[0]}.pdf`);
@@ -126,28 +138,31 @@ export default function ResultsPage({ params: { locale } }: { params: { locale: 
             <UserCircle className="h-5 w-5" /> {t.userEmail.replace('{email}', email)}
           </CardDescription>
         </CardHeader>
-        <CardContent ref={resultsRef} className="space-y-6 p-6">
-          {/* This div is for PDF capture, ensure email is inside for capture */}
-          <div className="text-center mb-4 border-b pb-2 hidden print:block data-[pdf-capture=true]:block">
-            <h2 className="text-lg font-semibold">{t.title}</h2>
-            <p className="text-sm text-muted-foreground">{t.userEmail.replace('{email}', email)}</p>
-          </div>
-
-          {TRAITS.map((traitKey) => {
-            const score = results[traitKey];
-            const level = getScoreLevel(score);
-            const description = traitDescriptions[traitKey][level];
-            return (
-              <TraitScoreDisplay
-                key={traitKey}
-                traitKey={traitKey}
-                traitName={t[traitKey as keyof typeof t]}
-                score={score}
-                description={description}
-              />
-            );
-          })}
-        </CardContent>
+        {/* This div is for PDF capture content */}
+        <div ref={resultsRef} className="p-6">
+            {/* This div is specifically for including email at the top of the PDF */}
+            {/* It's hidden by default on screen, but made visible for PDF capture */}
+            <div className="hidden text-center mb-4 border-b pb-2" data-pdf-capture="true">
+                <h2 className="text-lg font-semibold">{t.title}</h2>
+                <p className="text-sm text-muted-foreground">{t.userEmail.replace('{email}', email)}</p>
+            </div>
+            <CardContent className="space-y-6 pt-0"> 
+            {TRAITS.map((traitKey) => {
+                const score = results[traitKey];
+                const level = getScoreLevel(score);
+                const description = traitDescriptions[traitKey][level];
+                return (
+                <TraitScoreDisplay
+                    key={traitKey}
+                    traitKey={traitKey}
+                    traitName={t[traitKey as keyof typeof t]}
+                    score={score}
+                    description={description}
+                />
+                );
+            })}
+            </CardContent>
+        </div>
         <CardFooter>
           <Button 
             onClick={handleDownloadPdf} 
