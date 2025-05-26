@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react'; // Added 'use'
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -20,7 +20,10 @@ async function getClientDictionary(locale: Locale): Promise<Dictionary> {
 
 const QUESTIONS_PER_PAGE = 10;
 
-export default function QuestionnairePage({ params: { locale } }: { params: { locale: Locale } }) {
+// Updated props type
+export default function QuestionnairePage(props: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = use(props.params); // Unwrap params
+
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [currentPage, setCurrentPage] = useState(0);
   const router = useRouter();
@@ -74,6 +77,19 @@ export default function QuestionnairePage({ params: { locale } }: { params: { lo
 
     if (!allAnswered) {
       alert(dictionary?.Common.errorAllFieldsRequired || "It seems some questions from previous pages were missed. Please ensure all questions are answered.");
+      // Potentially find the first unanswered page and navigate there
+      // For simplicity, just alerting for now.
+      const firstUnansweredPage = questionsContent.reduce((acc, q, index) => {
+        if (answers[q.id] === undefined && acc === -1) {
+          return Math.floor(index / QUESTIONS_PER_PAGE);
+        }
+        return acc;
+      }, -1);
+
+      if (firstUnansweredPage !== -1 && firstUnansweredPage !== currentPage) {
+        setCurrentPage(firstUnansweredPage);
+        window.scrollTo(0, 0);
+      }
       return;
     }
 
@@ -179,4 +195,3 @@ export default function QuestionnairePage({ params: { locale } }: { params: { lo
     </div>
   );
 }
-
