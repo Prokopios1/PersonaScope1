@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, use } from 'react'; // Added 'use'
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -20,9 +20,8 @@ async function getClientDictionary(locale: Locale): Promise<Dictionary> {
 
 const QUESTIONS_PER_PAGE = 10;
 
-// Updated props type
 export default function QuestionnairePage(props: { params: Promise<{ locale: Locale }> }) {
-  const { locale } = use(props.params); // Unwrap params
+  const { locale } = use(props.params); 
 
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [currentPage, setCurrentPage] = useState(0);
@@ -48,7 +47,7 @@ export default function QuestionnairePage(props: { params: Promise<{ locale: Loc
   };
 
   const areAllQuestionsOnPageAnswered = () => {
-    if (!currentQuestionsBatch || currentQuestionsBatch.length === 0) return true; // No questions, so all "answered"
+    if (!currentQuestionsBatch || currentQuestionsBatch.length === 0) return true; 
     return currentQuestionsBatch.every(q => answers[q.id] !== undefined);
   };
 
@@ -76,9 +75,8 @@ export default function QuestionnairePage(props: { params: Promise<{ locale: Loc
     const allAnswered = allPresentedQuestionIds.every(id => answers[id] !== undefined);
 
     if (!allAnswered) {
-      alert(dictionary?.Common.errorAllFieldsRequired || "It seems some questions from previous pages were missed. Please ensure all questions are answered.");
-      // Potentially find the first unanswered page and navigate there
-      // For simplicity, just alerting for now.
+      alert(dictionary?.Common.errorMissedPreviousQuestions || "It seems some questions from previous pages were missed. Please ensure all questions are answered before submitting.");
+      
       const firstUnansweredPage = questionsContent.reduce((acc, q, index) => {
         if (answers[q.id] === undefined && acc === -1) {
           return Math.floor(index / QUESTIONS_PER_PAGE);
@@ -109,7 +107,6 @@ export default function QuestionnairePage(props: { params: Promise<{ locale: Loc
       }
 
       const answerValue = answers[displayedQuestion.id];
-      // `allAnswered` check ensures answerValue is defined
       const scoredValue = scoringInfo.isReverseScored ? (LIKERT_SCALE_SIZE + 1) - answerValue! : answerValue!;
       scores[scoringInfo.trait] += scoredValue;
     });

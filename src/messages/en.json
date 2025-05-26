@@ -77,7 +77,8 @@
     "error": "An error occurred. Please try again.",
     "previous": "Previous",
     "next": "Next",
-    "errorAllFieldsRequired": "Please answer all questions on this page to continue."
+    "errorAllFieldsRequired": "Please answer all questions on this page to continue.",
+    "errorMissedPreviousQuestions": "It seems some questions from previous pages were missed. Please ensure all questions are answered before submitting."
   },
   "traitQuestionnaireItems": [
     { "id": 1, "text": "Am the life of the party." },
