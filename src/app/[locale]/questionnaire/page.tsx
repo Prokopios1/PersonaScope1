@@ -135,7 +135,9 @@ export default function QuestionnairePage(props: { params: Promise<{ locale: Loc
   const t = dictionary.QuestionnairePage;
   const tInstructions = dictionary.InstructionsPage;
   const tCommon = dictionary.Common;
-  const progressValue = totalPages > 0 ? ((currentPage + 1) / totalPages) * 100 : 0;
+  
+  const answeredQuestionsCount = Object.keys(answers).length;
+  const progressValue = totalQuestions > 0 ? (answeredQuestionsCount / totalQuestions) * 100 : 0;
 
   return (
     <div className="flex flex-col items-center justify-center py-8">
