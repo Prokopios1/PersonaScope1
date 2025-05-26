@@ -29,7 +29,7 @@
   "QuestionnairePage": {
     "title": "Personality Questionnaire",
     "submit": "View Results",
-    "questionProgress": "Question {current} of {total}"
+    "questionRange": "Questions {start}-{end} of {total}"
   },
   "ResultsPage": {
     "title": "Your Mini-IPIP Personality Profile",
@@ -74,7 +74,10 @@
   },
   "Common": {
     "loading": "Loading...",
-    "error": "An error occurred. Please try again."
+    "error": "An error occurred. Please try again.",
+    "previous": "Previous",
+    "next": "Next",
+    "errorAllFieldsRequired": "Please answer all questions on this page to continue."
   },
   "traitQuestionnaireItems": [
     { "id": 1, "text": "Am the life of the party." },

@@ -29,7 +29,7 @@
   "QuestionnairePage": {
     "title": "Ερωτηματολόγιο Προσωπικότητας",
     "submit": "Προβολή Αποτελεσμάτων",
-    "questionProgress": "Ερώτηση {current} από {total}"
+    "questionRange": "Ερωτήσεις {start}-{end} από {total}"
   },
   "ResultsPage": {
     "title": "Το Προφίλ Προσωπικότητας Mini-IPIP Σας",
@@ -74,7 +74,10 @@
   },
   "Common": {
     "loading": "Φόρτωση...",
-    "error": "Παρουσιάστηκε σφάλμα. Παρακαλώ προσπαθήστε ξανά."
+    "error": "Παρουσιάστηκε σφάλμα. Παρακαλώ προσπαθήστε ξανά.",
+    "previous": "Προηγούμενη",
+    "next": "Επόμενη",
+    "errorAllFieldsRequired": "Παρακαλώ απαντήστε σε όλες τις ερωτήσεις αυτής της σελίδας για να συνεχίσετε."
   },
   "traitQuestionnaireItems": [
     { "id": 1, "text": "Είμαι η ψυχή του πάρτι." },
