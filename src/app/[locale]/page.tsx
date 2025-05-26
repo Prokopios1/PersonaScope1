@@ -1,6 +1,7 @@
+
 import { getDictionary } from '@/lib/getDictionary';
 import type { Locale } from '@/i18n-config';
-import EmailForm from '@/components/EmailForm';
+import NameForm from '@/components/NameForm'; // Changed from EmailForm to NameForm
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Atom } from 'lucide-react';
 
@@ -22,7 +23,7 @@ export default async function LandingPage({ params: { locale } }: { params: { lo
           <p className="text-foreground/80 leading-relaxed mb-8 whitespace-pre-line text-justify">
             {t.explanation}
           </p>
-          <EmailForm dictionary={t} locale={locale} />
+          <NameForm dictionary={t} locale={locale} /> {/* Changed component */}
         </CardContent>
       </Card>
     </div>
