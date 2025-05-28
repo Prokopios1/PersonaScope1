@@ -35,38 +35,150 @@
     "title": "Your Mini-IPIP Personality Profile",
     "userNameReport": "Report for: {name}",
     "downloadPdf": "Download PDF Report",
-    "openness": "Openness",
-    "conscientiousness": "Conscientiousness",
-    "extraversion": "Extraversion",
-    "agreeableness": "Agreeableness",
-    "neuroticism": "Neuroticism (Emotional Stability)",
-    "score": "Your score: {score}/20",
+    "percentileScoreLabel": "{percentileValue}th Percentile",
+    "behavioralExamplesTitle": "Behavioral Examples:",
+    "userLevelIntro": "Your responses suggest you tend to be:",
     "traitDescriptions": {
-        "openness": {
-            "high": "You are highly open to new experiences, imaginative, and intellectually curious. You likely enjoy variety and are creative.",
-            "medium": "You have a balanced approach to new experiences, being open to some novel ideas while also appreciating routine and the familiar.",
-            "low": "You tend to be more conventional, practical, and prefer familiar routines. You might be cautious about new or abstract ideas."
-          },
-          "conscientiousness": {
-            "high": "You are very organized, dependable, and self-disciplined. You likely plan ahead and are persistent in achieving your goals.",
-            "medium": "You are generally reliable and organized, but can also be flexible and spontaneous when needed.",
-            "low": "You tend to be more spontaneous, flexible, and perhaps less organized. You might prefer a less structured approach to tasks."
-          },
-          "extraversion": {
-            "high": "You are outgoing, energetic, and sociable. You likely enjoy being around others and are often assertive and talkative.",
-            "medium": "You are comfortable in social situations but also value your alone time. You can be outgoing or reserved depending on the context.",
-            "low": "You are more introverted, reserved, and prefer quieter settings. You might find large social gatherings draining and prefer solitary activities."
-          },
-          "agreeableness": {
-            "high": "You are compassionate, cooperative, and kind. You likely value harmony in relationships and are considerate of others' feelings.",
-            "medium": "You are generally cooperative and considerate, but can also assert your own needs and opinions when necessary.",
-            "low": "You tend to be more analytical, competitive, and may prioritize your own interests. You might be more skeptical or challenging in your interactions."
-          },
-          "neuroticism": {
-            "high": "You may experience emotions like anxiety, sadness, or irritability more frequently and intensely. You might be more sensitive to stress.",
-            "medium": "You experience a typical range of emotions and can manage stress reasonably well. You may have occasional mood swings but generally maintain emotional balance.",
-            "low": "You are generally calm, emotionally stable, and resilient. You likely handle stress well and experience negative emotions less frequently."
-          }
+      "openness": {
+        "traitName": "Openness to Experience",
+        "lowPole": {
+          "title": "Low Openness (Practical & Conventional)",
+          "generalDescription": "Individuals low in openness tend to be more conventional, practical, and prefer familiar routines. They might be cautious about new or abstract ideas and often favor the concrete and straightforward.",
+          "behavioralExamples": [
+            "Prefers to eat at familiar restaurants rather than trying new cuisines.",
+            "Focuses on concrete tasks and may find abstract theories less engaging.",
+            "Values tradition and established methods.",
+            "May be less interested in art or complex aesthetic experiences."
+          ]
+        },
+        "highPole": {
+          "title": "High Openness (Imaginative & Curious)",
+          "generalDescription": "Individuals high in openness are typically imaginative, intellectually curious, and appreciative of art and beauty. They are willing to try new things, entertain novel ideas, and experience a wide range of emotions.",
+          "behavioralExamples": [
+            "Enjoys exploring new cities or cultures.",
+            "Often daydreams or has a vivid imagination.",
+            "Likes to discuss philosophical or abstract concepts.",
+            "Appreciates various forms of art, music, or literature."
+          ]
+        },
+        "userLevelMessages": {
+          "high": "Highly open to new experiences, imaginative, and intellectually curious. You likely enjoy variety and are creative.",
+          "medium": "Balanced in your approach to new experiences. You are likely open to some novel ideas while also appreciating routine and the familiar.",
+          "low": "More conventional, practical, and prefer familiar routines. You might be cautious about new or abstract ideas."
+        }
+      },
+      "conscientiousness": {
+        "traitName": "Conscientiousness",
+        "lowPole": {
+          "title": "Low Conscientiousness (Spontaneous & Flexible)",
+          "generalDescription": "Individuals low in conscientiousness tend to be more spontaneous, flexible, and perhaps less organized. They might prefer a less structured approach to tasks and can be seen as easy-going.",
+          "behavioralExamples": [
+            "May make decisions on the spur of the moment.",
+            "Can be more relaxed about deadlines or tidiness.",
+            "Adapts easily to changing plans.",
+            "Might be perceived as less methodical or systematic."
+          ]
+        },
+        "highPole": {
+          "title": "High Conscientiousness (Organized & Dependable)",
+          "generalDescription": "Individuals high in conscientiousness are very organized, dependable, and self-disciplined. They likely plan ahead, are thorough, and are persistent in achieving their goals.",
+          "behavioralExamples": [
+            "Keeps a tidy workspace and detailed to-do lists.",
+            "Is punctual and reliable in commitments.",
+            "Works diligently towards long-term goals.",
+            "Prefers order and structure in their daily life."
+          ]
+        },
+        "userLevelMessages": {
+          "high": "Very organized, dependable, and self-disciplined. You likely plan ahead and are persistent in achieving your goals.",
+          "medium": "Generally reliable and organized, but can also be flexible and spontaneous when needed.",
+          "low": "More spontaneous, flexible, and perhaps less organized. You might prefer a less structured approach to tasks."
+        }
+      },
+      "extraversion": {
+        "traitName": "Extraversion",
+        "lowPole": {
+          "title": "Low Extraversion (Introverted & Reserved)",
+          "generalDescription": "Individuals low in extraversion (introverts) are more reserved, reflective, and prefer quieter settings. They often gain energy from solitude and may find large social gatherings draining.",
+          "behavioralExamples": [
+            "Prefers one-on-one conversations to large group activities.",
+            "Enjoys solitary hobbies like reading or writing.",
+            "May think carefully before speaking.",
+            "Recharges by spending time alone."
+          ]
+        },
+        "highPole": {
+          "title": "High Extraversion (Outgoing & Sociable)",
+          "generalDescription": "Individuals high in extraversion are outgoing, energetic, and sociable. They likely enjoy being around others, are often assertive and talkative, and gain energy from social interaction.",
+          "behavioralExamples": [
+            "Feels energized after spending time with a group of friends.",
+            "Often initiates conversations with new people.",
+            "Enjoys being the center of attention at times.",
+            "Prefers collaborative work environments."
+          ]
+        },
+        "userLevelMessages": {
+          "high": "Outgoing, energetic, and sociable. You likely enjoy being around others and are often assertive and talkative.",
+          "medium": "Comfortable in social situations but also value your alone time. You can be outgoing or reserved depending on the context.",
+          "low": "More introverted, reserved, and prefer quieter settings. You might find large social gatherings draining and prefer solitary activities."
+        }
+      },
+      "agreeableness": {
+        "traitName": "Agreeableness",
+        "lowPole": {
+          "title": "Low Agreeableness (Analytical & Competitive)",
+          "generalDescription": "Individuals low in agreeableness tend to be more analytical, competitive, and may prioritize their own interests. They can be skeptical, challenging, and less concerned with others' feelings.",
+          "behavioralExamples": [
+            "May voice dissenting opinions readily.",
+            "Is comfortable with conflict and negotiation.",
+            "Focuses on logic and facts over emotional appeals.",
+            "Can be perceived as tough-minded or critical."
+          ]
+        },
+        "highPole": {
+          "title": "High Agreeableness (Compassionate & Cooperative)",
+          "generalDescription": "Individuals high in agreeableness are compassionate, cooperative, and kind. They likely value harmony in relationships, are considerate of others' feelings, and tend to be trusting and helpful.",
+          "behavioralExamples": [
+            "Often goes out of their way to help others.",
+            "Tries to avoid arguments and seeks compromise.",
+            "Is generally trusting of others.",
+            "Shows empathy and concern for people in need."
+          ]
+        },
+        "userLevelMessages": {
+          "high": "Compassionate, cooperative, and kind. You likely value harmony in relationships and are considerate of others' feelings.",
+          "medium": "Generally cooperative and considerate, but can also assert your own needs and opinions when necessary.",
+          "low": "More analytical, competitive, and may prioritize your own interests. You might be more skeptical or challenging in your interactions."
+        }
+      },
+      "neuroticism": {
+        "traitName": "Neuroticism (Emotional Stability)",
+        "lowPole": {
+          "title": "Low Neuroticism (Emotionally Stable & Resilient)",
+          "generalDescription": "Individuals low in neuroticism (high emotional stability) are generally calm, emotionally stable, and resilient. They tend to handle stress well and experience negative emotions less frequently or intensely.",
+          "behavioralExamples": [
+            "Remains calm under pressure.",
+            "Worries infrequently about things out of their control.",
+            "Bounces back quickly from setbacks.",
+            "Generally maintains an even mood."
+          ]
+        },
+        "highPole": {
+          "title": "High Neuroticism (Sensitive & Prone to Worry)",
+          "generalDescription": "Individuals high in neuroticism may experience emotions like anxiety, sadness, or irritability more frequently and intensely. They might be more sensitive to stress and prone to worry.",
+          "behavioralExamples": [
+            "Often feels anxious or worried about various things.",
+            "May react strongly to stressful situations.",
+            "Can be self-critical or dwell on negative experiences.",
+            "Moods might fluctuate more noticeably."
+          ]
+        },
+        "userLevelMessages": {
+          "high": "More prone to experiencing emotions like anxiety, sadness, or irritability. You might be more sensitive to stress.",
+          "medium": "Experience a typical range of emotions and can manage stress reasonably well. You may have occasional mood swings but generally maintain emotional balance.",
+          "low": "Generally calm, emotionally stable, and resilient. You likely handle stress well and experience negative emotions less frequently."
+        }
+      }
     },
     "pdfGenerating": "Generating PDF...",
     "resultsSent": "Assessment data for {name} has been noted.",
