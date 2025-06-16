@@ -181,6 +181,8 @@
       }
     },
     "pdfGenerating": "Generating PDF...",
+    "resultsSentTitle": "Assessment Processed",
+    "resultsSentErrorTitle": "Processing Error",
     "resultsSent": "Assessment data for {name} has been noted.",
     "resultsSentError": "Failed to note assessment data for {name}."
   },

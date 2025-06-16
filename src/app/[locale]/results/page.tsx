@@ -51,24 +51,25 @@ export default function ResultsPage(props: { params: Promise<{ locale: Locale }>
   useEffect(() => {
     if (name && results && dictionary) {
       sendResultsToAdmin({ name, scores: results, locale })
-        .then(() => {
+        .then((response) => {
           toast({
-            title: dictionary.ResultsPage.resultsSent.replace('{name}', name), // Name already in resultsSent
-            description: `Data for ${name} recorded.`, 
-            variant: "default",
-            action: <CheckCircle className="text-green-500" />,
+            title: response.success ? (dictionary.ResultsPage.resultsSentTitle || "Success") : (dictionary.ResultsPage.resultsSentErrorTitle || "Error"),
+            description: response.message, 
+            variant: response.success ? "default" : "destructive",
+            action: response.success ? <CheckCircle className="text-green-500" /> : <AlertCircle className="text-red-500" />,
           });
         })
-        .catch((_error) => { // Explicitly name the error parameter
+        .catch((error) => { 
            toast({
-            title: dictionary.ResultsPage.resultsSentError.replace('{name}', name), // Name already in resultsSentError
+            title: dictionary.ResultsPage.resultsSentErrorTitle || "Error",
+            description: error.message || dictionary.Common.error || "An unexpected error occurred.",
             variant: "destructive",
             action: <AlertCircle className="text-red-500" />,
           });
         });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [name, results, locale, dictionary]);
+  }, [name, results, locale, dictionary, toast]);
 
 
   const handleDownloadPdf = async () => {
@@ -84,8 +85,8 @@ export default function ResultsPage(props: { params: Promise<{ locale: Locale }>
 
       const canvas = await html2canvas(resultsRef.current, { 
         scale: 2,
-        logging: false, // reduce console noise
-        useCORS: true, // if any images are from external sources
+        logging: false, 
+        useCORS: true, 
         windowWidth: resultsRef.current.scrollWidth,
         windowHeight: resultsRef.current.scrollHeight,
       });
@@ -101,7 +102,7 @@ export default function ResultsPage(props: { params: Promise<{ locale: Locale }>
       const imgWidth = canvas.width;
       const imgHeight = canvas.height;
       
-      const margin = 10; // mm
+      const margin = 10; 
       const contentWidth = pdfWidth - (margin * 2);
       const contentHeight = pdfHeight - (margin * 2);
 
@@ -158,7 +159,7 @@ export default function ResultsPage(props: { params: Promise<{ locale: Locale }>
                 const rawScore = results[traitKey];
                 const percentileScore = rawToPercentile(rawScore);
                 const level = getScoreLevel(rawScore);
-                // @ts-ignore TODO: Fix dictionary typing for nested structure
+                
                 const traitData = tResults.traitDescriptions[traitKey];
                 
                 if (!traitData || !traitData.lowPole || !traitData.highPole || !traitData.userLevelMessages) {
