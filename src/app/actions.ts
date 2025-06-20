@@ -14,7 +14,8 @@ interface SendResultsPayload {
 }
 
 export async function sendResultsToAdmin(payload: SendResultsPayload) {
-  console.log("Server Action: sendResultsToAdmin called with payload:", JSON.stringify(payload));
+  console.log("\n\n--- Server Action: sendResultsToAdmin TRIGGERED ---");
+  console.log("Payload received:", JSON.stringify(payload));
 
   const { name: userName, scores, locale } = payload;
   const adminEmail = "marketingopen10@gmail.com";
@@ -30,9 +31,7 @@ export async function sendResultsToAdmin(payload: SendResultsPayload) {
   if (!db) {
     // This check is crucial as firebase.ts can result in an undefined db
     dbMessage = "Firebase not initialized (db instance is undefined). Check server logs for missing/incorrect Firebase environment variables (e.g., FIREBASE_PROJECT_ID, FIREBASE_API_KEY) or initialization errors.";
-    console.error("sendResultsToAdmin Error:", dbMessage);
-     // Early return or throw if db is critical and not available.
-     // For now, we'll let it try email sending but report db failure.
+    console.error("❌ sendResultsToAdmin Error:", dbMessage);
   } else {
     console.log("Attempting to save assessment to Firestore for user:", userName);
     try {
@@ -44,10 +43,10 @@ export async function sendResultsToAdmin(payload: SendResultsPayload) {
         createdAt: serverTimestamp(),
       });
       dbSuccess = true;
-      dbMessage = "Results successfully saved to database.";
-      console.log("Assessment results saved to Firestore for user:", userName);
+      dbMessage = "✅ Results successfully saved to database.";
+      console.log("✅ Assessment results saved to Firestore for user:", userName);
     } catch (error: any) {
-      console.error("Error saving assessment to Firestore in action:", error.message, error.stack);
+      console.error("❌ Error saving assessment to Firestore in action:", error.message, error.stack);
       dbMessage = `Error saving to DB: ${error.message || "Unknown Firestore error"}. Ensure Firebase is configured correctly with all environment variables and Firestore rules allow writes.`;
     }
   }
@@ -73,15 +72,15 @@ export async function sendResultsToAdmin(payload: SendResultsPayload) {
         html: `<p>User Name: ${userName}</p><p>Locale: ${locale}</p><h3>Assessment Results (Mini-IPIP):</h3><pre>${resultsText.split('\n\n')[1]}</pre>`,
       });
 
-      console.log(`Email successfully sent to ${adminEmail}`);
+      console.log(`✉️ Email successfully sent to ${adminEmail}`);
       return { success: dbSuccess, message: `${dbMessage} Email also sent to admin.` };
 
     } catch (error) {
-      console.error("Failed to send email:", error);
+      console.error("❌ Failed to send email:", error);
       return { success: dbSuccess, message: `${dbMessage} However, failed to send email to admin.` };
     }
   } else {
-    console.log(`MOCK: Email (for user ${userName}) would be sent to ${adminEmail} with content:\n${resultsText}`);
+    console.log(`✉️ MOCK: Email (for user ${userName}) would be sent to ${adminEmail}`);
     // Simulate some delay for mock email
     await new Promise(resolve => setTimeout(resolve, 500)); // Reduced delay
     return { success: dbSuccess, message: `${dbMessage} Mock email noted.` };
