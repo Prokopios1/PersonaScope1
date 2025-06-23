@@ -3,6 +3,7 @@ import { Locale, i18n } from '@/i18n-config';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { getDictionary } from '@/lib/getDictionary';
+import type { Metadata } from 'next';
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ locale }));
@@ -28,7 +29,7 @@ export default async function LocaleLayout({
 }
 
 // Update metadata generation for dynamic title if needed
-export async function generateMetadata({ params }: { params: { locale: Locale } }) {
+export async function generateMetadata({ params }: { params: { locale: Locale } }): Promise<Metadata> {
   const dictionary = await getDictionary(params.locale);
   return {
     title: `${dictionary.PersonaScope.appName} - ${dictionary.PersonaScope.tagline}`,

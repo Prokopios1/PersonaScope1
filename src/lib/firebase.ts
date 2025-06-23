@@ -11,16 +11,7 @@ const firebaseConfig: FirebaseOptions = {
   appId: process.env.FIREBASE_APP_ID,
   measurementId: process.env.FIREBASE_MEASUREMENT_ID, // Optional
 };
-
-// Log the Firebase configuration values the app is seeing
-console.log("\n\n=======================================================");
-console.log("======= CHECKING FIREBASE CONFIG in src/lib/firebase.ts =======");
-console.log("=======================================================");
-console.log(`- Timestamp: ${new Date().toISOString()}`);
-console.log(`- FIREBASE_PROJECT_ID: ${process.env.FIREBASE_PROJECT_ID || "❗️NOT SET or UNDEFINED"}`);
-console.log(`- FIREBASE_API_KEY: ${process.env.FIREBASE_API_KEY ? "SET" : "❗️NOT SET or UNDEFINED"}`);
-console.log(`- FIREBASE_AUTH_DOMAIN: ${process.env.FIREBASE_AUTH_DOMAIN ? "SET" : "❗️NOT SET or UNDEFINED"}`);
-console.log("=======================================================\n\n");
+firebase functions:config:set FIREBASE_API_KEY="YOUR_COPIED_API_KEY"
 
 
 let app: FirebaseApp | undefined = undefined;
