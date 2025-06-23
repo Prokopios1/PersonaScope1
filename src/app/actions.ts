@@ -4,7 +4,7 @@
 import nodemailer from 'nodemailer';
 import type { TraitKey } from '@/constants/ipip';
 import type { Locale } from '@/i18n-config';
-import { db } from '@/lib/firebase'; // db can be undefined
+import { db, app } from '@/lib/firebase'; // Import app, db and app can be undefined
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 interface SendResultsPayload {
@@ -19,6 +19,7 @@ export async function sendResultsToAdmin(payload: SendResultsPayload) {
 
   const { name: userName, scores, locale } = payload;
   const adminEmail = "marketingopen10@gmail.com";
+  const projectId = app?.options.projectId || 'UNKNOWN (check .env.local)';
 
   let resultsText = `User Name: ${userName}\nLocale: ${locale}\n\nAssessment Results (Mini-IPIP):\n`;
   for (const trait in scores) {
@@ -26,14 +27,14 @@ export async function sendResultsToAdmin(payload: SendResultsPayload) {
   }
 
   let dbSuccess = false;
-  let dbMessage = "Failed to save results to database.";
+  let dbMessage = `Failed to save results to database project: ${projectId}.`;
 
-  if (!db) {
-    // This check is crucial as firebase.ts can result in an undefined db
-    dbMessage = "Firebase not initialized (db instance is undefined). Check server logs for missing/incorrect Firebase environment variables (e.g., FIREBASE_PROJECT_ID, FIREBASE_API_KEY) or initialization errors.";
+  if (!db || !app) {
+    dbMessage = `Firebase not initialized. Cannot connect to project '${projectId}'. Check server logs for missing/incorrect Firebase environment variables (e.g., FIREBASE_PROJECT_ID, FIREBASE_API_KEY).`;
     console.error("❌ sendResultsToAdmin Error:", dbMessage);
   } else {
-    console.log("Attempting to save assessment to Firestore for user:", userName);
+    const currentProjectId = app.options.projectId;
+    console.log(`Attempting to save assessment to Firestore project: '${currentProjectId}' for user:`, userName);
     try {
       const assessmentsCollectionRef = collection(db, 'assessments');
       await addDoc(assessmentsCollectionRef, {
@@ -43,11 +44,11 @@ export async function sendResultsToAdmin(payload: SendResultsPayload) {
         createdAt: serverTimestamp(),
       });
       dbSuccess = true;
-      dbMessage = "✅ Results successfully saved to database.";
+      dbMessage = `✅ Results successfully saved to database project: '${currentProjectId}'.`;
       console.log("✅ Assessment results saved to Firestore for user:", userName);
     } catch (error: any) {
       console.error("❌ Error saving assessment to Firestore in action:", error.message, error.stack);
-      dbMessage = `Error saving to DB: ${error.message || "Unknown Firestore error"}. Ensure Firebase is configured correctly with all environment variables and Firestore rules allow writes.`;
+      dbMessage = `Error saving to DB project '${currentProjectId}': ${error.message || "Unknown Firestore error"}. Ensure Firestore is enabled, check environment variables, and verify Firestore rules allow writes.`;
     }
   }
 
