@@ -14,32 +14,21 @@ interface SendResultsPayload {
 }
 
 export async function sendResultsToAdmin(payload: SendResultsPayload) {
-  console.log("\n\n--- Server Action: sendResultsToAdmin TRIGGERED ---");
-  console.log("Payload received:", JSON.stringify(payload));
-
   const { name: userName, scores, locale } = payload;
   const adminEmail = "marketingopen10@gmail.com";
-  
-  // Determine projectId for logging, even if app is undefined
-  const projectId = app?.options.projectId || process.env.FIREBASE_PROJECT_ID || 'UNKNOWN (check env vars)';
-
-  let resultsText = `User Name: ${userName}\nLocale: ${locale}\n\nAssessment Results (Mini-IPIP):\n`;
-  for (const trait in scores) {
-    resultsText += `${trait.charAt(0).toUpperCase() + trait.slice(1)}: ${scores[trait as TraitKey]}/20\n`;
-  }
+  const configuredProjectId = process.env.FIREBASE_PROJECT_ID || 'NOT_CONFIGURED';
 
   let dbSuccess = false;
-  let dbMessage = `Failed to save results to database project: ${projectId}.`;
+  let dbMessage = '';
 
   if (!db || !app) {
-    dbMessage = `Firebase not initialized for project '${projectId}'. Cannot save to DB. Check server logs for missing/incorrect Firebase environment variables (e.g., FIREBASE_PROJECT_ID, FIREBASE_API_KEY).`;
-    console.error("❌ sendResultsToAdmin Error:", dbMessage);
+    dbMessage = `Database connection failed. Project ID appears to be '${configuredProjectId}'. Please ensure all FIREBASE_... variables are correct in your .env.local file and that the server has been restarted.`;
+    console.error(`❌ DB Write Failure: Firebase not initialized. Configured Project ID: '${configuredProjectId}'. Check server logs.`);
   } else {
     const currentProjectId = app.options.projectId;
     console.log(`Attempting to save assessment to Firestore project: '${currentProjectId}' for user:`, userName);
     try {
-      const assessmentsCollectionRef = collection(db, 'assessments');
-      await addDoc(assessmentsCollectionRef, {
+      await addDoc(collection(db, 'assessments'), {
         name: userName,
         scores: scores,
         locale: locale,
@@ -47,14 +36,18 @@ export async function sendResultsToAdmin(payload: SendResultsPayload) {
       });
       dbSuccess = true;
       dbMessage = `✅ Results successfully saved to database project: '${currentProjectId}'.`;
-      console.log("✅ Assessment results saved to Firestore for user:", userName);
+      console.log(dbMessage);
     } catch (error: any) {
-      console.error("❌ Error saving assessment to Firestore in action:", error.message, error.stack);
-      dbMessage = `Error saving to DB project '${currentProjectId}': ${error.message || "Unknown Firestore error"}. Ensure Firestore is enabled, check environment variables, and verify Firestore rules allow writes.`;
+      dbMessage = `Error saving to DB project '${currentProjectId}': ${error.message || "Unknown Firestore error"}. Check Firestore rules in the Firebase console.`;
+      console.error("❌ Error saving assessment to Firestore:", error);
     }
   }
 
-
+  let resultsText = `User Name: ${userName}\nLocale: ${locale}\n\nAssessment Results (Mini-IPIP):\n`;
+  for (const trait in scores) {
+    resultsText += `${trait.charAt(0).toUpperCase() + trait.slice(1)}: ${scores[trait as TraitKey]}/20\n`;
+  }
+  
   if (process.env.NODE_ENV === 'development_email_mock') {
     try {
       const transporter = nodemailer.createTransport({
@@ -86,6 +79,6 @@ export async function sendResultsToAdmin(payload: SendResultsPayload) {
     console.log(`✉️ MOCK: Email (for user ${userName}) would be sent to ${adminEmail}`);
     // Simulate some delay for mock email
     await new Promise(resolve => setTimeout(resolve, 500)); // Reduced delay
-    return { success: dbSuccess, message: `${dbMessage} Mock email noted.` };
+    return { success: dbSuccess, message: `${dbMessage}` };
   }
 }
