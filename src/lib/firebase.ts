@@ -3,15 +3,14 @@ import { initializeApp, getApps, getApp, type FirebaseApp, type FirebaseOptions 
 import { getFirestore, type Firestore } from 'firebase/firestore';
 
 const firebaseConfig: FirebaseOptions = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.FIREBASE_APP_ID,
-  measurementId: process.env.FIREBASE_MEASUREMENT_ID, // Optional
+  apiKey: process.env.firebase_api_key,
+  authDomain: process.env.firebase_auth_domain,
+  projectId: process.env.firebase_project_id,
+  storageBucket: process.env.firebase_storage_bucket,
+  messagingSenderId: process.env.firebase_messaging_sender_id,
+  appId: process.env.firebase_app_id,
+  measurementId: process.env.firebase_measurement_id, // Optional
 };
-firebase functions:config:set FIREBASE_API_KEY="YOUR_COPIED_API_KEY"
 
 
 let app: FirebaseApp | undefined = undefined;

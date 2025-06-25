@@ -84,7 +84,7 @@ export default function ResultsPage(props: { params: Promise<{ locale: Locale }>
       }
 
       const canvas = await html2canvas(resultsRef.current, { 
-        scale: 2,
+        scale: 4,
         logging: false, 
         useCORS: true, 
         windowWidth: resultsRef.current.scrollWidth,
@@ -102,7 +102,7 @@ export default function ResultsPage(props: { params: Promise<{ locale: Locale }>
       const imgWidth = canvas.width;
       const imgHeight = canvas.height;
       
-      const margin = 10; 
+      const margin = 5; 
       const contentWidth = pdfWidth - (margin * 2);
       const contentHeight = pdfHeight - (margin * 2);
 
