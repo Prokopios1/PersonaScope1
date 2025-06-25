@@ -141,7 +141,7 @@ export default function ResultsPage(props: { params: Promise<{ locale: Locale }>
 
   return (
     <div className="flex flex-col items-center justify-center py-8">
-      <Card className="w-full max-w-3xl shadow-xl" id="results-content-wrapper">
+      <Card className="w-full max-w-5xl shadow-xl" id="results-content-wrapper">
         <CardHeader className="text-center">
           <BarChart3 className="h-12 w-12 mx-auto mb-4 text-primary" />
           <CardTitle className="text-3xl font-bold">{tResults.title}</CardTitle>
