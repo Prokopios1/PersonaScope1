@@ -3,19 +3,24 @@ import { initializeApp, getApps, getApp, type FirebaseApp, type FirebaseOptions 
 import { getFirestore, type Firestore } from 'firebase/firestore';
 
 const firebaseConfig: FirebaseOptions = {
-  apiKey: process.env.firebase_api_key,
-  authDomain: process.env.firebase_auth_domain,
-  projectId: process.env.firebase_project_id,
-  storageBucket: process.env.firebase_storage_bucket,
-  messagingSenderId: process.env.firebase_messaging_sender_id,
-  appId: process.env.firebase_app_id,
-  measurementId: process.env.firebase_measurement_id, // Optional
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID, // Optional
 };
 
+console.log("\n\n--- CHECKING FIREBASE CONFIG in src/lib/firebase.ts ---");
+console.log(`- Project ID from env: ${firebaseConfig.projectId || 'NOT SET (Check FIREBASE_PROJECT_ID in .env.local)'}`);
+console.log(`- API Key from env: ${firebaseConfig.apiKey ? 'SET' : 'NOT SET (Check FIREBASE_API_KEY in .env.local)'}`);
+console.log("------------------------------------------------------\n\n");
 
 let app: FirebaseApp | undefined = undefined;
 let db: Firestore | undefined = undefined;
 
+// Only attempt to initialize if the essential variables are present
 if (firebaseConfig.projectId && firebaseConfig.apiKey) {
   if (!getApps().length) {
     try {
@@ -41,7 +46,7 @@ if (firebaseConfig.projectId && firebaseConfig.apiKey) {
   }
 } else {
   console.error(
-    "❌ Critical Firebase configuration error: FIREBASE_PROJECT_ID and/or FIREBASE_API_KEY are missing or undefined in environment variables. Firebase will not be initialized, and 'db' will be undefined."
+    "❌ Critical Firebase configuration error: 'projectId' and/or 'apiKey' are missing or undefined. Firebase will not be initialized, and 'db' will be undefined."
   );
 }
 

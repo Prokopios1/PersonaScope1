@@ -19,7 +19,9 @@ export async function sendResultsToAdmin(payload: SendResultsPayload) {
 
   const { name: userName, scores, locale } = payload;
   const adminEmail = "marketingopen10@gmail.com";
-  const projectId = app?.options.projectId || 'UNKNOWN (check .env.local)';
+  
+  // Determine projectId for logging, even if app is undefined
+  const projectId = app?.options.projectId || process.env.FIREBASE_PROJECT_ID || 'UNKNOWN (check env vars)';
 
   let resultsText = `User Name: ${userName}\nLocale: ${locale}\n\nAssessment Results (Mini-IPIP):\n`;
   for (const trait in scores) {
@@ -30,7 +32,7 @@ export async function sendResultsToAdmin(payload: SendResultsPayload) {
   let dbMessage = `Failed to save results to database project: ${projectId}.`;
 
   if (!db || !app) {
-    dbMessage = `Firebase not initialized. Cannot connect to project '${projectId}'. Check server logs for missing/incorrect Firebase environment variables (e.g., FIREBASE_PROJECT_ID, FIREBASE_API_KEY).`;
+    dbMessage = `Firebase not initialized for project '${projectId}'. Cannot save to DB. Check server logs for missing/incorrect Firebase environment variables (e.g., FIREBASE_PROJECT_ID, FIREBASE_API_KEY).`;
     console.error("❌ sendResultsToAdmin Error:", dbMessage);
   } else {
     const currentProjectId = app.options.projectId;
