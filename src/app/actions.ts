@@ -4,8 +4,6 @@
 import nodemailer from 'nodemailer';
 import type { TraitKey } from '@/constants/ipip';
 import type { Locale } from '@/i18n-config';
-import { db, app } from '@/lib/firebase'; // Import app, db and app can be undefined
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 interface SendResultsPayload {
   name: string;
@@ -16,38 +14,17 @@ interface SendResultsPayload {
 export async function sendResultsToAdmin(payload: SendResultsPayload) {
   const { name: userName, scores, locale } = payload;
   const adminEmail = "marketingopen10@gmail.com";
-  const configuredProjectId = process.env.FIREBASE_PROJECT_ID || 'NOT_CONFIGURED';
 
-  let dbSuccess = false;
-  let dbMessage = '';
+  const resultsText = `User Name: ${userName}\nLocale: ${locale}\n\nAssessment Results (Mini-IPIP):\n${TRAITS.map(
+    (trait) =>
+      `${trait.charAt(0).toUpperCase() + trait.slice(1)}: ${
+        scores[trait as TraitKey]
+      }/20`
+  ).join('\n')}`;
 
-  if (!db || !app) {
-    dbMessage = `Database connection failed. Project ID appears to be '${configuredProjectId}'. Please ensure all FIREBASE_... variables are correct in your .env.local file and that the server has been restarted.`;
-    console.error(`❌ DB Write Failure: Firebase not initialized. Configured Project ID: '${configuredProjectId}'. Check server logs.`);
-  } else {
-    const currentProjectId = app.options.projectId;
-    console.log(`Attempting to save assessment to Firestore project: '${currentProjectId}' for user:`, userName);
-    try {
-      await addDoc(collection(db, 'assessments'), {
-        name: userName,
-        scores: scores,
-        locale: locale,
-        createdAt: serverTimestamp(),
-      });
-      dbSuccess = true;
-      dbMessage = `✅ Results successfully saved to database project: '${currentProjectId}'.`;
-      console.log(dbMessage);
-    } catch (error: any) {
-      dbMessage = `Error saving to DB project '${currentProjectId}': ${error.message || "Unknown Firestore error"}. Check Firestore rules in the Firebase console.`;
-      console.error("❌ Error saving assessment to Firestore:", error);
-    }
-  }
+  // The database write operation has been removed as requested.
+  // The function will now only handle email notifications.
 
-  let resultsText = `User Name: ${userName}\nLocale: ${locale}\n\nAssessment Results (Mini-IPIP):\n`;
-  for (const trait in scores) {
-    resultsText += `${trait.charAt(0).toUpperCase() + trait.slice(1)}: ${scores[trait as TraitKey]}/20\n`;
-  }
-  
   if (process.env.NODE_ENV === 'development_email_mock') {
     try {
       const transporter = nodemailer.createTransport({
@@ -69,16 +46,17 @@ export async function sendResultsToAdmin(payload: SendResultsPayload) {
       });
 
       console.log(`✉️ Email successfully sent to ${adminEmail}`);
-      return { success: dbSuccess, message: `${dbMessage} Email also sent to admin.` };
+      return { success: true, message: `An email with the results has been sent to the administrator.` };
 
     } catch (error) {
       console.error("❌ Failed to send email:", error);
-      return { success: dbSuccess, message: `${dbMessage} However, failed to send email to admin.` };
+      return { success: false, message: `There was an error sending the results email.` };
     }
   } else {
     console.log(`✉️ MOCK: Email (for user ${userName}) would be sent to ${adminEmail}`);
-    // Simulate some delay for mock email
-    await new Promise(resolve => setTimeout(resolve, 500)); // Reduced delay
-    return { success: dbSuccess, message: `${dbMessage}` };
+    await new Promise(resolve => setTimeout(resolve, 500));
+    return { success: true, message: `Assessment for ${userName} noted. Email sending is mocked in this environment.` };
   }
 }
+
+const TRAITS: TraitKey[] = ['openness', 'conscientiousness', 'extraversion', 'agreeableness', 'neuroticism'];
