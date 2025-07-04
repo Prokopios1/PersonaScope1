@@ -17,8 +17,12 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 async function getClientDictionary(locale: Locale): Promise<Dictionary> {
-  const mod = await import(`@/messages/${locale}.json`);
-  return mod.default;
+  // Use conditional imports to help the bundler resolve the files.
+  if (locale === 'el') {
+    return import('@/messages/el.json').then(module => module.default);
+  }
+  // Fallback to English
+  return import('@/messages/en.json').then(module => module.default);
 }
 
 export default function ResultsPage(props: { params: Promise<{ locale: Locale }> }) {
