@@ -1,0 +1,33 @@
+{
+  "name": "PersonaScope",
+  "short_name": "PersonaScope",
+  "description": "Discover Your Personality Profile with the Mini-IPIP Assessment based on the Big Five model.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#eaf2fa",
+  "theme_color": "#2272cf",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
