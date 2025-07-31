@@ -17,11 +17,9 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 async function getClientDictionary(locale: Locale): Promise<Dictionary> {
-  // Use conditional imports to help the bundler resolve the files.
   if (locale === 'el') {
     return import('@/messages/el.json').then(module => module.default);
   }
-  // Fallback to English
   return import('@/messages/en.json').then(module => module.default);
 }
 
